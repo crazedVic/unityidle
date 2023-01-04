@@ -4,20 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 public class ButtonController : MonoBehaviour {
 
     public Button Button1;
     public TextMeshProUGUI text2; // TextCounter ....... starts at 1
-    public TextMeshProUGUI textCost;
-    public TextMeshProUGUI textProduction;
+    public TextMeshProUGUI textCost; // text box for cost of next producitvity increase 
+    public TextMeshProUGUI textProduction; // text box for current productivity 
     public float timer = 0.0f;
-    public float counter = 1.0f;
+    public CounterController counterObj; //public float counter = 1.0f;
+
+
     public float num_increase = 1.0f;
     public float cost = 1.0f;
+    public Button btn;
 
     void Awake()
     {
-        Application.targetFrameRate = 22;
+        //Application.targetFrameRate = 22;
     }
 
     // Start is called before the first frame update, use for initilization 
@@ -28,15 +32,18 @@ public class ButtonController : MonoBehaviour {
         
     }
 
+    void Destroy()
+    {
+        btn.onClick.RemoveListener(TaskOnClick); // destroy listener to prevent memory leak if ButtonController obj is destroyed, an active listener will create mem leak?
+    }
 
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        Debug.Log(Time.deltaTime); //approx 0.003 so 333fps???
+       /* timer += Time.deltaTime;
+        Debug.Log(Time.deltaTime); //approx 0.003 so 333fps with no limit on frame rate??? ~0.05 or ~20fps when target frame rate is set to 22
 
         // update counter based on current producivity, i.e., higher productivity means more update of text2 per sec up to a limit of every 100ms
-
         if (1.0/num_increase <= 0.1)
         {
             // limit reached now update every 100ms or 0.1s
@@ -59,25 +66,23 @@ public class ButtonController : MonoBehaviour {
                 counter = (int)(counter + 1.0);
                 timer = 0;
             }
-        } 
+        } */
     }
 
     public void TaskOnClick() {
         // change rate at which textfield increments if enough credits are available 
         // also change textfield overlayed on button to show the cost of next increment change 
-        //Debug.Log ("You have clicked the button!");
-        //text2.text = "Some new line of text.";
 
         // only perfom button action if we have enough "points"
-        if (counter >= cost)
+        if (counterObj.getCounter() >= cost)
         {
             // increase producity, subtract cost from "points" and increase next cost amount 
             num_increase = num_increase * 2;
-            counter -= cost;
+            counterObj.setCounter(counterObj.getCounter() - cost);
             cost = cost * 2.32f;
 
             // update GUI, round values  
-            text2.text = (( (int) counter).ToString());
+            text2.text = (( (int) counterObj.getCounter()).ToString());
             textCost.text = "(COST: " + ((int)cost).ToString() + " NUMBER)";
             textProduction.text = ( (int) num_increase).ToString() + " number per second";
         }
