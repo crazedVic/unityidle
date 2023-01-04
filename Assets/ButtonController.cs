@@ -15,6 +15,10 @@ public class ButtonController : MonoBehaviour {
     public float num_increase = 1.0f;
     public float cost = 1.0f;
 
+    void Awake()
+    {
+        Application.targetFrameRate = 22;
+    }
 
     // Start is called before the first frame update, use for initilization 
     void Start()
@@ -29,7 +33,7 @@ public class ButtonController : MonoBehaviour {
     void Update()
     {
         timer += Time.deltaTime;
-        //Debug.Log(Time.deltaTime); //approx 0.003 so 333fps???
+        Debug.Log(Time.deltaTime); //approx 0.003 so 333fps???
 
         // update counter based on current producivity, i.e., higher productivity means more update of text2 per sec up to a limit of every 100ms
 
