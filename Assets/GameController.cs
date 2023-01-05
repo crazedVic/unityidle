@@ -95,8 +95,8 @@ public class GameController : MonoBehaviour
 
     public IEnumerator countingDown(float count_increase)
     {
-        // count down for 2 seconds 
-        float countDownLength = 0.0f; // CHANGE HERE TO INCREASE/ DECREASE COUNTDOWN
+        // count down for 1 seconds 
+        float countDownLength = 1.0f; // CHANGE HERE TO INCREASE/ DECREASE COUNTDOWN
         float numIterations = 0.0f;
 
         // loop through count down using Wait 
