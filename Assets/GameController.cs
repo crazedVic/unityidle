@@ -50,7 +50,7 @@ public class GameController : MonoBehaviour
             coroutineCountingDown = countingDown(num_increase);
             countDown = true;
             StartCoroutine(coroutineCountingDown);
-            SetProgress(1f, 1f); // progress, speed
+            SetProgress(1f, 3f); // progress, speed
         }
     }
 
@@ -82,10 +82,18 @@ public class GameController : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.09f);
+        //yield return new WaitForSeconds(0.09f); // removing this reduces stuttering when manager is purchased
+
+        // after progress bar has been animated then reset it
         ProgressImage.fillAmount = 0;
+        Debug.Log("animating progress is finished in coroutine");
+        updateCountDownUI(3.0f);
+
+        // can prob get rid of these two lines I think, from the tutorial but I don't think they serve a purpose here
         onProgress?.Invoke(Progress);
         OnCompleted?.Invoke();
+        
+
     }
 
 
@@ -120,7 +128,7 @@ public class GameController : MonoBehaviour
             coroutineCountingDown = countingDown(num_increase);
             countDown = true;
             StartCoroutine(coroutineCountingDown);
-            SetProgress(1f, 1f); // progress, speed
+            SetProgress(1f, 3f); // progress, speed
         }
 
         // else do nothing. If manager is purchased they will increase count themselves
@@ -139,18 +147,19 @@ public class GameController : MonoBehaviour
     public IEnumerator countingDown(float count_increase)
     {
         // count down for 1 seconds 
-        float countDownLength = 1.0f; // CHANGE HERE TO INCREASE/ DECREASE COUNTDOWN
+        float countDownLength = 3.0f; // CHANGE HERE TO INCREASE/ DECREASE COUNTDOWN
         float numIterations = 0.0f;
 
         // loop through count down using Wait 
         while(countDownLength - numIterations > 0)
         {
-            updateCountDownUI(countDownLength - numIterations);
             numIterations += 1.0f;
+            updateCountDownUI(countDownLength - numIterations);
+            
             yield return new WaitForSeconds(1.0f);
         }
 
-        updateCountDownUI(0f);
+        //updateCountDownUI(0f);
         countDown = false;
         StopCoroutine(coroutineCountingDown);
         counter += count_increase;
