@@ -7,44 +7,63 @@ using TMPro;
 
 public class GameController : MonoBehaviour
 {
-    // progress bar
-    public Image ProgressImage;
-    public float DefaultSpeed = 1f;
     public UnityEvent<float> onProgress;
     public UnityEvent OnCompleted;
     public Coroutine AnimationCoroutine;
-
+    public IEnumerator coroutineCountingDown;
+    public Image ProgressImage;
+    public Button ProductivityClick;
     public Button ManualClick;
     public Button BuyManager;
-    public bool countDown = false;
-    public float counter = 0.0f;
+    public Button SaveButton;
+    public Button LoadButton;
+    public Button ResetButton;
     public TextMeshProUGUI textCounter;
-    public TextMeshProUGUI textCountDown; 
-    public bool managerPurchased = false;
-    public IEnumerator coroutineCountingDown; 
-
-    public Button ProductivityClick;
+    public TextMeshProUGUI textCountDown;
     public TextMeshProUGUI textCost; // text box for cost of next producitvity increase 
     public TextMeshProUGUI managerButtonText;
     public TextMeshProUGUI textProduction; // text box for current productivity 
+
     public float timer = 0.0f;
     public float num_increase = 1.0f;
     public float cost = 1.0f;
+    public float DefaultSpeed = 1f;
+    public float autoSaveTimer = 0.0f;
+    public float counter = 0.0f;
+    public bool countDown = false;
+    public bool managerPurchased = false;
+/*
+    // values to be saved
+    spublic float currentNumIncrease;
+    public float currentCost;
+    public float currentCounter;
+    public float currentManagerPurchased; // SET TO FLOAT BECAUSE PlayerPrefs does not allow bool to be saved*/
+
 
     // Start is called before the first frame update
     void Start()
     {
-        // empty
+        // ON START check for saved data, if it exists then cost=savedcost or whatever, LoadGame should load data if it exists
+        LoadGame();
+
+        // update GUI to reflect load game values
+        updateCounterUI();
     }
 
     // Update is called once per frame
     void Update()
     {
+        autoSaveTimer += Time.deltaTime;
+
+        if (autoSaveTimer > 15)
+        {
+            SaveGame();
+            autoSaveTimer = 0f;
+        }
+
+        // if manager is purchased then auto click
         if (managerPurchased && countDown == false)
         {
-            // update count automatically. manual click button should automatically be disabled. 
-
-            
             // start count down via coroutine
             coroutineCountingDown = countingDown(num_increase);
             countDown = true;
@@ -52,6 +71,7 @@ public class GameController : MonoBehaviour
             SetProgress(1f, 3f); // progress, speed
         }
 
+        // change transparency of Buy Manager button based on if purchase can be made or not
         if (counter < 1000.0f)
         {
             managerButtonText.alpha = 0.37f;
@@ -95,14 +115,92 @@ public class GameController : MonoBehaviour
         ProgressImage.fillAmount = 0;
         updateCountDownUI(3.0f);
 
-        // can prob get rid of these two lines I think, from the tutorial but I don't think they serve a purpose here
+        // can prob get rid of OnCompleted, from the tutorial but I don't think it serves a purpose here
         onProgress?.Invoke(Progress);
         OnCompleted?.Invoke();
         
 
     }
 
+    public void SaveButtonClicked()
+    {
+        SaveGame();
+    }
 
+    public void LoadButtonClicked()
+    {
+        LoadGame();
+    }
+
+    public void ResetButtonClicked()
+    {
+        ResetGame();
+    }
+
+
+    public void SaveGame()
+    {
+        PlayerPrefs.SetFloat("SavedNumIncrease", num_increase);
+        PlayerPrefs.SetFloat("SavedCost", cost);
+        PlayerPrefs.SetFloat("SavedCounter", counter);
+
+        // save boolean as int 
+        if (managerPurchased == true)
+        {
+            PlayerPrefs.SetInt("SavedManagerPurchased", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("SavedManagerPurchased", 0);
+        }
+
+        PlayerPrefs.Save();
+        Debug.Log("Game data saved!");
+    }
+
+    public void LoadGame()
+    {
+        if (PlayerPrefs.HasKey("SavedNumIncrease")) // have at least some saved data then load it
+        {
+            // retrieve floats
+            num_increase = PlayerPrefs.GetFloat("SavedNumIncrease");
+            cost = PlayerPrefs.GetFloat("SavedCost");
+            counter = PlayerPrefs.GetFloat("SavedCounter");
+            int intermediateManagerPurchased = PlayerPrefs.GetInt("SavedManagerPurchased");
+
+            // retrieve boolean
+            if (intermediateManagerPurchased == 1)
+            {
+                managerPurchased = true;
+            }
+            else
+            {
+                managerPurchased = false;
+            }
+            Debug.Log("Game data loaded!");
+
+            // update UI with new count
+            updateCounterUI();
+        }
+        else
+            Debug.LogError("There is no save data!");
+    }
+
+    public void ResetGame()
+    {
+        // delete saved data
+        PlayerPrefs.DeleteAll();
+
+        // reset state of game to have default/ original val's
+        num_increase = 1.0f;
+        cost = 1.0f;
+        counter = 0f;
+        managerPurchased = false;
+
+        // update counter UI and log reset
+        updateCounterUI();
+        Debug.Log("Data reset complete");
+    }
 
     /*
      * change rate at which textfield increments if enough credits are available 
@@ -187,16 +285,16 @@ public class GameController : MonoBehaviour
         if(minutes<=9.0f && seconds <=9.0f)
         {
             textCountDown.text = ((0).ToString() + ((int)minutes).ToString() + ":" + (0).ToString() + ((int)seconds).ToString());
-
-        } else if(minutes>9.0f && seconds <= 9.0f)
+        } 
+        else if(minutes>9.0f && seconds <= 9.0f)
         {
             textCountDown.text = (((int)minutes).ToString() + ":" + (0).ToString() + ((int)seconds).ToString());
-
-        } else if(minutes<=9.0f && seconds > 9.0f)
+        } 
+        else if(minutes<=9.0f && seconds > 9.0f)
         {
             textCountDown.text = ((0).ToString() + ((int)minutes).ToString() + ":" + ((int)seconds).ToString());
-
-        } else if (minutes >9.0f && seconds > 9.0f)
+        } 
+        else if (minutes >9.0f && seconds > 9.0f)
         {
             textCountDown.text = (((int)minutes).ToString() + ":" + ((int)seconds).ToString());
         }
@@ -206,7 +304,8 @@ public class GameController : MonoBehaviour
     // updateCounterTextBox
     public void updateCounterUI()
     {
-            textCounter.text = (((int)counter).ToString("#,#")); // update GUI, round values 
+        //textCounter.text = (((int)counter).ToString("#,#")); // update GUI, round values 
+        textCounter.text = $"{counter:n0}"; // ToString does not work when you need to print "0"
     }
 
 
