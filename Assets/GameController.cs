@@ -14,8 +14,6 @@ public class GameController : MonoBehaviour
     public UnityEvent OnCompleted;
     public Coroutine AnimationCoroutine;
 
-
-
     public Button ManualClick;
     public Button BuyManager;
     public bool countDown = false;
@@ -61,7 +59,6 @@ public class GameController : MonoBehaviour
             if(AnimationCoroutine != null)
             {
                 StopCoroutine(AnimationCoroutine);
-                // clear progress bar?
             }
 
             AnimationCoroutine = StartCoroutine(AnimateProgress(Progress, Speed));
@@ -141,6 +138,10 @@ public class GameController : MonoBehaviour
             managerPurchased = true;
             counter -= 1000.0f;
             updateCounterUI();
+
+            // Deactivates Buy Manager and Manual Click button
+            BuyManager.gameObject.SetActive(false);
+            ManualClick.gameObject.SetActive(false);
         }
     }
 
@@ -159,7 +160,7 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(1.0f);
         }
 
-        //updateCountDownUI(0f);
+        //updateCountDownUI(0f); // removed or else the timer is not reset back to 00:03, it goes straight to 00;00
         countDown = false;
         StopCoroutine(coroutineCountingDown);
         counter += count_increase;
