@@ -25,6 +25,7 @@ public class GameController : MonoBehaviour
 
     public Button ProductivityClick;
     public TextMeshProUGUI textCost; // text box for cost of next producitvity increase 
+    public TextMeshProUGUI managerButtonText;
     public TextMeshProUGUI textProduction; // text box for current productivity 
     public float timer = 0.0f;
     public float num_increase = 1.0f;
@@ -49,6 +50,15 @@ public class GameController : MonoBehaviour
             countDown = true;
             StartCoroutine(coroutineCountingDown);
             SetProgress(1f, 3f); // progress, speed
+        }
+
+        if (counter < 1000.0f)
+        {
+            managerButtonText.alpha = 0.37f;
+        }
+        else
+        {
+            managerButtonText.alpha = 1.0f;
         }
     }
 
@@ -83,7 +93,6 @@ public class GameController : MonoBehaviour
 
         // after progress bar has been animated then reset it
         ProgressImage.fillAmount = 0;
-        Debug.Log("animating progress is finished in coroutine");
         updateCountDownUI(3.0f);
 
         // can prob get rid of these two lines I think, from the tutorial but I don't think they serve a purpose here
