@@ -1,11 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
 public class GameController : MonoBehaviour
 {
+    // progress bar
+    public Image ProgressImage;
+    public float DefaultSpeed = 1f;
+    public UnityEvent<float> onProgress;
+    public UnityEvent OnCompleted;
+    public Coroutine AnimationCoroutine;
+
+
+
     public Button ManualClick;
     public Button BuyManager;
     public bool countDown = false;
@@ -25,7 +35,7 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // empty?
+        // empty
     }
 
     // Update is called once per frame
@@ -40,11 +50,43 @@ public class GameController : MonoBehaviour
             coroutineCountingDown = countingDown(num_increase);
             countDown = true;
             StartCoroutine(coroutineCountingDown);
-
+            SetProgress(1f, 1f); // progress, speed
         }
     }
 
+    public void SetProgress(float Progress, float Speed)
+    {
+        if(Progress != ProgressImage.fillAmount)
+        {
+            if(AnimationCoroutine != null)
+            {
+                StopCoroutine(AnimationCoroutine);
+                // clear progress bar?
+            }
 
+            AnimationCoroutine = StartCoroutine(AnimateProgress(Progress, Speed));
+        }
+    }
+
+    public IEnumerator AnimateProgress(float Progress, float Speed)
+    {
+        float time = 0;
+        float initialProgress = ProgressImage.fillAmount;
+
+        while (time < 1)
+        {
+            ProgressImage.fillAmount = Mathf.Lerp(initialProgress, Progress, time);
+            time += Time.deltaTime * (1 / Speed);
+
+            onProgress?.Invoke(ProgressImage.fillAmount);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.09f);
+        ProgressImage.fillAmount = 0;
+        onProgress?.Invoke(Progress);
+        OnCompleted?.Invoke();
+    }
 
 
 
@@ -78,6 +120,7 @@ public class GameController : MonoBehaviour
             coroutineCountingDown = countingDown(num_increase);
             countDown = true;
             StartCoroutine(coroutineCountingDown);
+            SetProgress(1f, 1f); // progress, speed
         }
 
         // else do nothing. If manager is purchased they will increase count themselves
