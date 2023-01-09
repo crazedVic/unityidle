@@ -32,13 +32,6 @@ public class GameController : MonoBehaviour
     public float counter = 0.0f;
     public bool countDown = false;
     public bool managerPurchased = false;
-/*
-    // values to be saved
-    spublic float currentNumIncrease;
-    public float currentCost;
-    public float currentCounter;
-    public float currentManagerPurchased; // SET TO FLOAT BECAUSE PlayerPrefs does not allow bool to be saved*/
-
 
     // Start is called before the first frame update
     void Start()
@@ -118,8 +111,6 @@ public class GameController : MonoBehaviour
         // can prob get rid of OnCompleted, from the tutorial but I don't think it serves a purpose here
         onProgress?.Invoke(Progress);
         OnCompleted?.Invoke();
-        
-
     }
 
     public void SaveButtonClicked()

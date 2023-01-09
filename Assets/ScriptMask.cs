@@ -28,6 +28,7 @@ public class ScriptMask : MonoBehaviour
             temp_game_object.transform.localPosition = new Vector3(32.5f + (float)(130*i), 0, 0f);
             //temp_game_object.transform.localScale = Vector3.one * 1f; //  sets scale to 1, objects were not scaling properly for some reason
             blocks.Add(temp_game_object);
+
             /*
             GameObject temp_game_object1 = Instantiate(darkPreFab, new Vector3(0, 0, 0), Quaternion.identity);
             temp_game_object1.transform.SetParent(parent.transform, false);
