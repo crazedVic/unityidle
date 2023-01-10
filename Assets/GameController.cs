@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI textCost; // text box for cost of next producitvity increase 
     public TextMeshProUGUI managerButtonText;
     public TextMeshProUGUI textProduction; // text box for current productivity 
+    public TextMeshProUGUI textMultiplier;
 
     public float timer = 0.0f;
     public float num_increase = 1.0f;
@@ -33,6 +34,9 @@ public class GameController : MonoBehaviour
     public bool countDown = false;
     public bool managerPurchased = false;
 
+    public int multiplier_count = 1;
+    public float countDownLength = 5f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,11 +45,26 @@ public class GameController : MonoBehaviour
 
         // update GUI to reflect load game values
         updateCounterUI();
+
+        // updateCountDownUI to default val
+        updateCountDownUI(countDownLength);
+
+        // update productivity button UI to match last game save 
+        updateProductivityButtonUI();
+
+        updateMultiplierCount();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // multiplier boost
+        checkMultiplier();
+        
+         
+
+
+
         autoSaveTimer += Time.deltaTime;
 
         if (autoSaveTimer > 15)
@@ -61,7 +80,7 @@ public class GameController : MonoBehaviour
             coroutineCountingDown = countingDown(num_increase);
             countDown = true;
             StartCoroutine(coroutineCountingDown);
-            SetProgress(1f, 3f); // progress, speed
+            SetProgress(1f, countDownLength); // progress, speed
         }
 
         // change transparency of Buy Manager button based on if purchase can be made or not
@@ -72,6 +91,18 @@ public class GameController : MonoBehaviour
         else
         {
             managerButtonText.alpha = 1.0f;
+        }
+    }
+
+    public void checkMultiplier()
+    {
+        if (counter >= (float)Mathf.Pow(10, (float)(multiplier_count)))
+        {
+            multiplier_count++;
+
+            // cut timer in half 
+            countDownLength = countDownLength / 2.0f;
+            updateMultiplierCount();
         }
     }
 
@@ -106,7 +137,7 @@ public class GameController : MonoBehaviour
 
         // after progress bar has been animated then reset it
         ProgressImage.fillAmount = 0;
-        updateCountDownUI(3.0f);
+        updateCountDownUI(countDownLength);
 
         // can prob get rid of OnCompleted, from the tutorial but I don't think it serves a purpose here
         onProgress?.Invoke(Progress);
@@ -207,10 +238,9 @@ public class GameController : MonoBehaviour
             counter -= cost;
             cost = cost * 2.32f;
 
-            // update GUI, round values  
-            textCounter.text = (((int)counter).ToString());
-            textCost.text = "(COST: " + ((int)cost).ToString() + " NUMBER)";
-            textProduction.text = ((int)num_increase).ToString() + " number per second";
+            // update GUI, round values
+            updateProductivityButtonUI();
+            
         }
 
     }
@@ -223,7 +253,7 @@ public class GameController : MonoBehaviour
             coroutineCountingDown = countingDown(num_increase);
             countDown = true;
             StartCoroutine(coroutineCountingDown);
-            SetProgress(1f, 3f); // progress, speed
+            SetProgress(1f, countDownLength); // progress, speed
         }
 
         // else do nothing. If manager is purchased they will increase count themselves
@@ -246,7 +276,7 @@ public class GameController : MonoBehaviour
     public IEnumerator countingDown(float count_increase)
     {
         // count down for 1 seconds 
-        float countDownLength = 3.0f; // CHANGE HERE TO INCREASE/ DECREASE COUNTDOWN
+        //float countDownLength = 3.0f; // CHANGE HERE TO INCREASE/ DECREASE COUNTDOWN
         float numIterations = 0.0f;
 
         // loop through count down using Wait 
@@ -262,6 +292,8 @@ public class GameController : MonoBehaviour
         countDown = false;
         StopCoroutine(coroutineCountingDown);
         counter += count_increase;
+        checkMultiplier();
+        updateCountDownUI(countDownLength); // update count down after checking UI after increasing count
         updateCounterUI();
     }
 
@@ -297,6 +329,18 @@ public class GameController : MonoBehaviour
     {
         //textCounter.text = (((int)counter).ToString("#,#")); // update GUI, round values 
         textCounter.text = $"{counter:n0}"; // ToString does not work when you need to print "0"
+    }
+
+    public void updateProductivityButtonUI()
+    {
+        textCounter.text = (((int)counter).ToString());
+        textCost.text = "(COST: " + ((int)cost).ToString() + " NUMBER)";
+        textProduction.text = ((int)num_increase).ToString() + " number per second";
+    }
+
+    public void updateMultiplierCount()
+    {
+        textMultiplier.text = "Current Time Multiplier: " + ((int)multiplier_count).ToString() + "x";
     }
 
 
