@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
     public bool managerPurchased = false;
 
     public int multiplier_count = 1;
-    public float countDownLength = 5f;
+    public static float countDownLength = 5f;
 
     // Start is called before the first frame update
     void Start()
@@ -60,10 +60,19 @@ public class GameController : MonoBehaviour
     {
         // multiplier boost
         checkMultiplier();
-        
-         
 
+        if(countDownLength<1.0f)
+        {
+            // replace with barber animation if countdown is <1 second
+            // Deactivates progress bar and activates barbershop animation 
+            ProgressImage.gameObject.SetActive(false);
+            
 
+        } else
+        {
+            ProgressImage.gameObject.SetActive(true);
+            
+        }
 
         autoSaveTimer += Time.deltaTime;
 

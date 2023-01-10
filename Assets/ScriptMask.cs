@@ -27,13 +27,34 @@ public class ScriptMask : MonoBehaviour
             //temp_game_object.transform.localScale = Vector3.one * 1f; //  sets scale to 1, objects were not scaling properly for some reason
             blocks.Add(temp_game_object);
 
+            // deactivate animation by default
+            temp_game_object.gameObject.SetActive(false);
+
         }
+
+        // deactivate animation by default
+        darkPreFabStationaryBackground.gameObject.SetActive(false);
+        parent.SetActive(false);
+
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameController.countDownLength<1.0f)
+        {
+            // initialze animation 
+            parent.SetActive(true);
+            darkPreFabStationaryBackground.gameObject.SetActive(true);
+            
+
+            foreach (GameObject block in blocks)
+            {
+                block.gameObject.SetActive(true);
+            }
+        }
         
     }
 }

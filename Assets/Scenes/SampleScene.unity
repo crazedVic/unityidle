@@ -870,6 +870,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   ProgressImage: {fileID: 903807198}
+  ProgressImageBorder: {fileID: 884175579}
   ProductivityClick: {fileID: 1193259061}
   ManualClick: {fileID: 1110127006}
   BuyManager: {fileID: 21525628}
