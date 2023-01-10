@@ -870,7 +870,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   ProgressImage: {fileID: 903807198}
-  ProgressImageBorder: {fileID: 884175579}
   ProductivityClick: {fileID: 1193259061}
   ManualClick: {fileID: 1110127006}
   BuyManager: {fileID: 21525628}
@@ -892,7 +891,6 @@ MonoBehaviour:
   countDown: 0
   managerPurchased: 0
   multiplier_count: 1
-  countDownLength: 5
 --- !u!222 &447980016
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1003,7 +1001,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &488518681
 GameObject:
@@ -1205,50 +1203,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511885387}
   m_CullTransparentMesh: 1
---- !u!1 &588159769
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 588159771}
-  - component: {fileID: 588159770}
-  m_Layer: 0
-  m_Name: BarberAnimation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &588159770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588159769}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 440c21f29d6704849a813c05f5566920, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &588159771
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588159769}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1103.9811, y: 539.40564, z: -8.13084}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &884175577
 GameObject:
   m_ObjectHideFlags: 0

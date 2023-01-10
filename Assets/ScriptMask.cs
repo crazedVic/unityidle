@@ -34,7 +34,7 @@ public class ScriptMask : MonoBehaviour
 
         // deactivate animation by default
         darkPreFabStationaryBackground.gameObject.SetActive(false);
-        parent.SetActive(false);
+        //parent.SetActive(false);
 
 
 
@@ -43,8 +43,10 @@ public class ScriptMask : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameController.countDownLength<1.0f)
+        
+        if (GameController.countDownLength<=1.0f)
         {
+            //Debug.Log("update of ScriptMask");
             // initialze animation 
             parent.SetActive(true);
             darkPreFabStationaryBackground.gameObject.SetActive(true);
